@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deforecast-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - hosts:
+        - app.deforecast.energy
+        - api.deforecast.energy
+      secretName: deforecast-tls
+  rules:
+    - host: app.deforecast.energy
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: deforecast-frontend
+                port:
+                  number: 80
+    - host: api.deforecast.energy
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: deforecast-backend
+                port:
+                  number: 80
